@@ -16,7 +16,7 @@ public interface Cache<K,V> {
      * @param key the key of an object
      *            //TODO change throws to specific cache exception
      * @throws NullPointerException if the key is null
-     * @return
+     * @return displaced value if the cache is full. If there is no displaced value
      */
     Optional<V> put(K key, V value);//throws ;
 
