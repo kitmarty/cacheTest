@@ -1,5 +1,7 @@
 package cachetest;
 
+import java.util.Optional;
+
 /**
  * An object that allows to manage the cache moving objects between memory, disk etc.
  * Works with pair Key-Value.
@@ -12,37 +14,24 @@ public interface Cache<K,V> {
      * Adds new pair Key-Value to the cache.
      * If the cache already contains value with particular key, the key will be replaced.
      * @param key the key of an object
-     * @throws ClassCastException if the key or the value are of an inappropriate type for this cache
+     *            //TODO change throws to specific cache exception
      * @throws NullPointerException if the key is null
+     * @return
      */
-    void set(K key, V value);
+    Optional<V> put(K key, V value);//throws ;
 
     /**
      * Returns the value from cache by the key.
      * If the key doesn't exist in the cache null will be returned
      * @param key the key of an object
-     * @throws ClassCastException if the key is of an inappropriate type for this cache
      * @throws NullPointerException if the key is null
      * @return the value to which the specified key is mapped
      */
-    V get(K key);
-
-    /**
-     * Clears the cache.
-     */
-    void clear();
-
-    /**
-     * Removes the value from cache associated with the key
-     * @throws ClassCastException if the key is of an inappropriate type for this cache
-     * @throws NullPointerException if the key is null
-     */
-    void remove(K key);
+    Optional<V> get(K key);
 
     /**
      * Check whether the cache contains particular Key
      * @param key the key of an object
-     * @throws ClassCastException if the key is of an inappropriate type for this cache
      * @throws NullPointerException if the key is null
      * @return true if cache contains the key, false if not
      */
