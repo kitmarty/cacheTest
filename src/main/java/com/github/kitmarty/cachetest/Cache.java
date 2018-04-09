@@ -1,5 +1,6 @@
-package cachetest;
+package com.github.kitmarty.cachetest;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -18,7 +19,7 @@ public interface Cache<K,V> {
      * @throws NullPointerException if the key is null
      * @return displaced value if the cache is full. If there is no displaced value
      */
-    Optional<V> put(K key, V value);//throws ;
+    Optional<Map.Entry<K,V>> put(K key, V value);//throws ;
 
     /**
      * Returns the value from cache by the key.
