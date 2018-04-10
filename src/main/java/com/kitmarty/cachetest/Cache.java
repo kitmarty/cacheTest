@@ -1,4 +1,4 @@
-package com.github.kitmarty.cachetest;
+package com.kitmarty.cachetest;
 
 import java.util.Map;
 import java.util.Optional;
