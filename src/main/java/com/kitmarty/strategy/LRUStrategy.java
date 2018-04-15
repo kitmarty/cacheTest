@@ -1,22 +1,17 @@
 package com.kitmarty.strategy;
 
-import com.kitmarty.strategy.Strategy;
-
 import java.util.ArrayDeque;
 import java.util.Optional;
 
 /**
- * FIFOStrategy class extends Storage abstract class and implements simple fifo strategy of queue.
- * This simple strategy allows add new elements to the queue,
- * but getting elements doesn't have any affect for elements order in the queue.
- * If you try to add new element, but it's already in queue, this element will be moved to the end of the queue.
- * @param <K> type of key
+ * This class implements least recently used caching strategy.
+ * @param <K> key value
  */
-public class FIFOStrategy<K> extends Strategy<K> {
+public class LRUStrategy<K> extends Strategy<K> {
 
     private final ArrayDeque<K> queue = new ArrayDeque<>();
 
-    public FIFOStrategy(int size) {
+    public LRUStrategy(int size) {
         super(size);
     }
 
@@ -35,6 +30,10 @@ public class FIFOStrategy<K> extends Strategy<K> {
 
     @Override
     public boolean update(K key) {
+        if (queue.removeFirstOccurrence(key)) {
+            queue.add(key);
+            return true;
+        }
         return false;
     }
 
@@ -45,18 +44,19 @@ public class FIFOStrategy<K> extends Strategy<K> {
 
     @Override
     public String toString() {
-        return "FIFOStrategy{" +
+        return "LRUStrategy{" +
                 "queue=" + queue +
                 '}';
     }
 
     public static void main(String[] args) {
-        Strategy<Integer> strat = new FIFOStrategy<Integer>(3);
+        Strategy<Integer> strat = new LRUStrategy<Integer>(3);
         strat.put(1);
         strat.put(2);
-        strat.put(1);
-        //strat.put(1);
-        //strat.put(4);
+        strat.put(3);
+        strat.update(1);
+        strat.put(4);
         System.out.print(strat.toString());
     }
+
 }

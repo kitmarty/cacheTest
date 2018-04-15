@@ -33,6 +33,13 @@ public class MemoryStorage<K,V> implements Storage<K,V> {
         return Optional.ofNullable(objectStorage.remove(key));
     }
 
+    @Override
+    public String toString() {
+        return "MemoryStorage{" +
+                "objectStorage=" + objectStorage +
+                '}';
+    }
+
     public static void main(String[] args) {
         MemoryStorage<Integer, String> m = new MemoryStorage<>(null);
         MemoryStorage<Integer, String> m2 = MemoryStorage.ofHashMap();

@@ -21,7 +21,7 @@ public abstract class Strategy<K> {
      * If we apply this method for lru strategy, it has to make some changes in ordering.
      * @param key
      */
-    public abstract void update(K key);
+    public abstract boolean update(K key);
 
     /**
      * In comparison with get method, this method check if the key exists in the cache and return true/false.

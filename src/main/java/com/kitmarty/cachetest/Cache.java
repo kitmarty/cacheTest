@@ -7,8 +7,8 @@ import java.util.Optional;
  * An object that allows to manage the cache moving objects between memory, disk etc.
  * Works with pair Key-Value.
  * Key cannot be null or duplicates through the cache.
- * @param <K> the type of keys the cache uses
- * @param <V> the type of values the cache contains
+ * @param <K> the type of keys maintained by this cache
+ * @param <V> the type of values contained in this cache
  */
 public interface Cache<K,V> {
     /**
@@ -19,7 +19,7 @@ public interface Cache<K,V> {
      * @throws NullPointerException if the key is null
      * @return displaced value if the cache is full. If there is no displaced value
      */
-    Optional<Map.Entry<K,V>> put(K key, V value);//throws ;
+    Optional<Map.Entry<K,V>> put(K key, V value); //throws CacheException;
 
     /**
      * Returns the value from cache by the key.
