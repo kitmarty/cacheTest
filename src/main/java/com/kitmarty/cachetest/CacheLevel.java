@@ -3,6 +3,7 @@ package com.kitmarty.cachetest;
 import com.kitmarty.storage.MemoryStorage;
 import com.kitmarty.storage.Storage;
 import com.kitmarty.strategy.FIFOStrategy;
+import com.kitmarty.strategy.LRUStrategy;
 import com.kitmarty.strategy.Strategy;
 
 import java.util.AbstractMap;
@@ -33,8 +34,8 @@ public class CacheLevel<K,V> implements Cache<K,V> {
 
         displacedKey = strategy.put(key);
         if (displacedKey.isPresent()) {
-            displacedValue = storage.remove((K) displacedKey);
-            displacedEntry = new AbstractMap.SimpleEntry<K,V>((K) displacedKey, (V) displacedValue);
+            displacedValue = storage.remove(displacedKey.get());
+            displacedEntry = new AbstractMap.SimpleEntry<K,V>(displacedKey.get(), displacedValue.get());
             storage.put(key,value);
             return Optional.ofNullable(displacedEntry);
         }
@@ -66,11 +67,14 @@ public class CacheLevel<K,V> implements Cache<K,V> {
 
     public static void main(String[] args) {
         Cache<Integer,String> cache =
-                new CacheLevel<Integer, String>(new MemoryStorage<>(new HashMap<>()), new FIFOStrategy<>(3));
+                new CacheLevel<Integer, String>(new MemoryStorage<>(new HashMap<>()), new LRUStrategy<>(3));
         cache.put(1,"Один");
         cache.put(2,"Два");
         cache.put(3,"Три");
-        cache.put(4,"Три");
+        cache.put(4,"Четыре");
+        cache.get(2);
+        cache.put(5,"Пять");
+        cache.put(6,"Шесть");
         System.out.print(cache.toString());
     }
 }
