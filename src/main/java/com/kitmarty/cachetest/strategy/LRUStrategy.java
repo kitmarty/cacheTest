@@ -1,7 +1,7 @@
 package com.kitmarty.cachetest.strategy;
 
-import com.kitmarty.cachetest.service.LinkedHashMapQueue;
-
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -9,18 +9,29 @@ import java.util.Optional;
  * @param <K> key value
  */
 public class LRUStrategy<K> extends Strategy<K> {
-
-    private final LinkedHashMapQueue<K,K> queue;
+    private final LinkedHashMap<K,K> queue;
 
     public LRUStrategy(int size) {
         super(size);
-        queue = new LinkedHashMapQueue<K,K>(size,0.75f,true, size);
+        queue = new LinkedHashMap<K,K>(size,0.75f,true){
+            private final int MAX_ENTRIES = size;
+
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<K, K> eldest) {
+                return size() > MAX_ENTRIES;
+            }
+        };
     }
 
     @Override
     public Optional<K> put(K key) {
         Optional<K> valueToReturn;
-        valueToReturn = Optional.ofNullable(queue.put(key, key));
+        if (queue.size()==size) {
+            valueToReturn = Optional.ofNullable(queue.entrySet().iterator().next().getKey());
+        }else{
+            valueToReturn = Optional.empty();
+        }
+        queue.put(key, key);
         return valueToReturn;
     }
 
