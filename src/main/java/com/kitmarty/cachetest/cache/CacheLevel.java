@@ -1,15 +1,11 @@
-package com.kitmarty.cachetest;
+package com.kitmarty.cachetest.cache;
 
-import com.kitmarty.storage.MemoryStorage;
-import com.kitmarty.storage.Storage;
-import com.kitmarty.strategy.FIFOStrategy;
-import com.kitmarty.strategy.LRUStrategy;
-import com.kitmarty.strategy.Strategy;
+import com.kitmarty.cachetest.storage.MemoryStorage;
+import com.kitmarty.cachetest.storage.Storage;
+import com.kitmarty.cachetest.strategy.LRUStrategy;
+import com.kitmarty.cachetest.strategy.Strategy;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * CacheLevelLevel is implementation of Cache Interface, that allows to organize one cache level.
@@ -28,6 +24,7 @@ public class CacheLevel<K,V> implements Cache<K,V> {
 
     @Override
     public Optional<Map.Entry<K, V>> put(K key, V value) {
+        Objects.requireNonNull(key,"Key cannot be null");
         Optional<K> displacedKey;
         Optional<V> displacedValue;
         AbstractMap.SimpleEntry<K,V> displacedEntry;
@@ -75,6 +72,7 @@ public class CacheLevel<K,V> implements Cache<K,V> {
         cache.get(2);
         cache.put(5,"Пять");
         cache.put(6,"Шесть");
+        //cache.put(null,"Пусто");
         System.out.print(cache.toString());
     }
 }

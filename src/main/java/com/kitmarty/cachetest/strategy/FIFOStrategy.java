@@ -1,6 +1,4 @@
-package com.kitmarty.strategy;
-
-import com.kitmarty.strategy.Strategy;
+package com.kitmarty.cachetest.strategy;
 
 import java.util.ArrayDeque;
 import java.util.Optional;
@@ -14,12 +12,13 @@ import java.util.Optional;
  */
 public class FIFOStrategy<K> extends Strategy<K> {
 
-    private final ArrayDeque<K> queue = new ArrayDeque<>();
+    private final ArrayDeque<K> queue = new ArrayDeque<K>();
 
     public FIFOStrategy(int size) {
         super(size);
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Optional<K> put(K key) {
         Optional<K> valueToReturn;
@@ -44,19 +43,7 @@ public class FIFOStrategy<K> extends Strategy<K> {
     }
 
     @Override
-    public String toString() {
-        return "FIFOStrategy{" +
-                "queue=" + queue +
-                '}';
-    }
-
-    public static void main(String[] args) {
-        Strategy<Integer> strat = new FIFOStrategy<Integer>(3);
-        strat.put(1);
-        strat.put(2);
-        strat.put(1);
-        //strat.put(1);
-        //strat.put(4);
-        System.out.print(strat.toString());
+    public int getSize() {
+        return queue.size();
     }
 }

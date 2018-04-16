@@ -1,4 +1,4 @@
-package com.kitmarty.cachetest;
+package com.kitmarty.cachetest.cache;
 
 import java.util.Map;
 import java.util.Optional;

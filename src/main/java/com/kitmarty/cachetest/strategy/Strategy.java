@@ -1,4 +1,4 @@
-package com.kitmarty.strategy;
+package com.kitmarty.cachetest.strategy;
 
 import java.util.Optional;
 
@@ -30,4 +30,17 @@ public abstract class Strategy<K> {
      * @return
      */
     public abstract boolean containsKey(K key);
+
+    /**
+     * @return Maximum quantity of cache elements
+     */
+    public int getCapacity(){
+        return size;
+    }
+
+    /**
+     *
+     * @return Current quantity of cache elements
+     */
+    public abstract int getSize();
 }
