@@ -56,8 +56,8 @@ public class FifoStrategyTest {
     }
 
     @Test
-    public void FifoUpdateNonExisting(){
-        assertThat(strategy.update(1),is(false));
+    public void FifoUpdateNonExisting() {
+        assertThat(strategy.update(1), is(false));
     }
 
     @Test
@@ -76,5 +76,15 @@ public class FifoStrategyTest {
     @Test
     public void FifoStaticInit() {
         Strategy.Fifo(5);
+    }
+
+    @Test
+    public void FifoRemove() {
+        strategy.put(1);
+        strategy.put(2);
+        strategy.remove(1);
+        strategy.put(3);
+        strategy.put(4);
+        assertThat(strategy.put(5).get(), is(2));
     }
 }

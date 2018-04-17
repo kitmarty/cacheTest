@@ -55,4 +55,8 @@ public class LruStrategy<K> extends Strategy<K> {
     public int getSize() {
         return queue.size();
     }
+
+    public void remove(K key) {
+        queue.remove(key);
+    }
 }

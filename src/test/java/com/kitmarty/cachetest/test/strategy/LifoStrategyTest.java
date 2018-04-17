@@ -64,8 +64,8 @@ public class LifoStrategyTest {
     }
 
     @Test
-    public void LifoUpdateNonExisting(){
-        assertThat(strategy.update(1),is(false));
+    public void LifoUpdateNonExisting() {
+        assertThat(strategy.update(1), is(false));
     }
 
     @Test(expected = NullPointerException.class)
@@ -76,5 +76,15 @@ public class LifoStrategyTest {
     @Test
     public void LifoStaticInit() {
         Strategy.Lifo(5);
+    }
+
+    @Test
+    public void LifoRemove() {
+        strategy.put(1);
+        strategy.put(2);
+        strategy.remove(1);
+        strategy.put(3);
+        strategy.put(4);
+        assertThat(strategy.put(5).get(), is(4));
     }
 }

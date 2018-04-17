@@ -57,4 +57,6 @@ public abstract class Strategy<K> {
      * @return Current quantity of cache elements
      */
     public abstract int getSize();
+
+    public abstract void remove(K key);
 }

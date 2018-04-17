@@ -54,4 +54,18 @@ public class CacheLevel<K, V> implements Cache<K, V> {
     public boolean containsKey(K key) {
         return strategy.containsKey(key);
     }
+
+    public Optional<Map.Entry<K, V>> remove(K key) {
+        if (containsKey(key)) {
+            Optional<V> displacedValue;
+            AbstractMap.SimpleEntry<K, V> displacedEntry;
+
+
+            displacedValue = storage.remove(key);
+            strategy.remove(key);
+            displacedEntry = new AbstractMap.SimpleEntry<K, V>(key, displacedValue.get());
+            return Optional.ofNullable(displacedEntry);
+        }
+        return Optional.empty();
+    }
 }

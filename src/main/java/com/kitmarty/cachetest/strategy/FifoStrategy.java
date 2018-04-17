@@ -52,4 +52,9 @@ public class FifoStrategy<K> extends Strategy<K> {
     public int getSize() {
         return queue.size();
     }
+
+    @Override
+    public void remove(K key) {
+        queue.remove(key);
+    }
 }
