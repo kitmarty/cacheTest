@@ -1,30 +1,33 @@
 package com.kitmarty.cachetest.strategy;
 
 import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
- * LIFOStrategy class extends Storage abstract class and implements simple lifo strategy of stack.
+ * LifoStrategy class extends Storage abstract class and implements simple Lifo strategy of stack.
  * This simple strategy allows add new elements to the stack,
  * but getting elements doesn't have any affect for elements order in the stack.
  * If you try to add new element, but it's already in queue, this element will be moved to the top of the stack.
+ *
  * @param <K> type of key
  */
-public class LIFOStrategy<K> extends Strategy<K> {
+public class LifoStrategy<K> extends Strategy<K> {
 
     private final ArrayDeque<K> queue = new ArrayDeque<K>();
 
-    public LIFOStrategy(int size) {
+    public LifoStrategy(int size) {
         super(size);
     }
 
     @Override
     public Optional<K> put(K key) {
+        Objects.requireNonNull(key, "LifoStrategy put null key");
         Optional<K> valueToReturn;
         queue.removeFirstOccurrence(key);
-        if (queue.size()==size){
+        if (queue.size() == size) {
             valueToReturn = Optional.ofNullable(queue.pop());
-        }else{
+        } else {
             valueToReturn = Optional.empty();
         }
         queue.push(key);
@@ -33,6 +36,9 @@ public class LIFOStrategy<K> extends Strategy<K> {
 
     @Override
     public boolean update(K key) {
+        if (containsKey(key)) {
+            return true;
+        }
         return false;
     }
 
