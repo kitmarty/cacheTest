@@ -7,7 +7,8 @@ import java.util.*;
 
 public class MultiLevelCache<K, V> implements Cache<K, V> {
 
-    private final LinkedHashSet<CacheLevel<K, V>> cacheList = new LinkedHashSet<>();
+    //private final LinkedHashSet<CacheLevel<K, V>> cacheList = new LinkedHashSet<>();
+    private final LinkedList<CacheLevel<K, V>> cacheList = new LinkedList<>();
 
     public MultiLevelCache() {
     }
