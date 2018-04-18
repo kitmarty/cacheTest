@@ -1,8 +1,5 @@
 package com.kitmarty.cachetest.cache;
 
-import com.kitmarty.cachetest.storage.MemoryStorage;
-import com.kitmarty.cachetest.strategy.Strategy;
-
 import java.util.*;
 
 public class MultiLevelCache<K, V> implements Cache<K, V> {
@@ -35,7 +32,7 @@ public class MultiLevelCache<K, V> implements Cache<K, V> {
                 key = displacedEntry.get().getKey();
                 value = displacedEntry.get().getValue();
             }
-            return Optional.ofNullable(new AbstractMap.SimpleEntry<K, V>(key, value));
+            return Optional.ofNullable(new AbstractMap.SimpleEntry<>(key, value));
         }
         throw new NullPointerException();
     }
@@ -81,3 +78,10 @@ public class MultiLevelCache<K, V> implements Cache<K, V> {
         return cacheList.size();
     }
 }
+
+//TODO warnings by idea
+//TODO change architecture in Strategy
+//TODO add method that returns quantity elements of multilevel cache
+//TODO make test easier and more function
+//TODO test naming
+//TODO delete init of empty multilevel cache

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("Duplicates")
 public class LruStrategyTest {
 
-    private Strategy<Integer> strategy = new LruStrategy<>(3);
+    private final Strategy<Integer> strategy = new LruStrategy<>(3);
 
     @Test
     public void LruReplaceKeyWhenCacheIsNotFull() {
@@ -85,7 +85,7 @@ public class LruStrategyTest {
 
     @Test
     public void LruStaticInit() {
-        Strategy.Lru(5);
+        Strategy.createLru(5);
     }
 
     @Test

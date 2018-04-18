@@ -19,14 +19,14 @@ public interface Storage<K, V> {
 
     /**
      * Gets value from cache by key.
-     * @param key
+     * @param key key for getting value
      * @return value that corresponds to the key
      */
     Optional<V> get(K key);
 
     /**
      * Removes key-value pair from storage by the key.
-     * @param key
+     * @param key key for removing value
      * @return value that corresponds to the key
      */
     Optional<V> remove(K key);

@@ -13,7 +13,7 @@ public class MemoryStorage<K, V> implements Storage<K, V> {
         return new MemoryStorage<>(new HashMap<>());
     }
 
-    public MemoryStorage(Map<K, V> objectStorage) {
+    private MemoryStorage(Map<K, V> objectStorage) {
         Objects.requireNonNull(objectStorage, "objectStorage");
         this.objectStorage = objectStorage;
     }

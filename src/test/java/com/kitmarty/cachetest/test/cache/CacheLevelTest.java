@@ -11,17 +11,17 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class CacheLevelTest {
-    private CacheLevel<Integer, String> cacheLevel = new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3));
+    private final CacheLevel<Integer, String> cacheLevel = new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3));
 
     @Test
     public void CacheLevelInit() {
-        new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(5));
+        new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(5));
     }
 
 
     @Test(expected = NullPointerException.class)
     public void CacheLevelInitNullStorage() {
-        new CacheLevel<>(null, Strategy.Fifo(5));
+        new CacheLevel<>(null, Strategy.createFifo(5));
     }
 
     @Test(expected = NullPointerException.class)

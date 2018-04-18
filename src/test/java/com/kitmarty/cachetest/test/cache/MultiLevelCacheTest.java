@@ -8,26 +8,24 @@ import org.junit.Test;
 
 import java.util.LinkedHashSet;
 
-import static org.junit.Assert.*;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class MultiLevelCacheTest {
-    private MultiLevelCache<Integer, String> multiLevelCache = new MultiLevelCache<>();
+    private final MultiLevelCache<Integer, String> multiLevelCache = new MultiLevelCache<>();
 
     @Test
     public void MultiLevelAddLevel() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(5)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(5)));
         assertThat(multiLevelCache.getLevelQuantity(), is(2));
     }
 
     @Test
     public void MultiLevelInitWithList() {
         LinkedHashSet<CacheLevel<Integer, String>> cacheList = new LinkedHashSet<>();
-        cacheList.add(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        cacheList.add(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(5)));
+        cacheList.add(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        cacheList.add(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(5)));
         MultiLevelCache<Integer, String> multiLevelCache1 = new MultiLevelCache<>(cacheList);
         assertThat(multiLevelCache1.getLevelQuantity(), is(2));
     }
@@ -39,9 +37,9 @@ public class MultiLevelCacheTest {
 
     @Test
     public void MultiLevelTestSimplePutThreeLevel() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         multiLevelCache.put(2, "Two");
         multiLevelCache.put(3, "Three");
@@ -54,9 +52,9 @@ public class MultiLevelCacheTest {
 
     @Test
     public void MultiLevelGetFromThirdLevelAndAutoInsertInFirstCacheLevel() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         multiLevelCache.put(2, "Two");
         multiLevelCache.put(3, "Three");
@@ -70,9 +68,9 @@ public class MultiLevelCacheTest {
 
     @Test
     public void MultiLevelSimpleGetReturn() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         multiLevelCache.put(2, "Two");
         multiLevelCache.put(3, "Three");
@@ -85,18 +83,18 @@ public class MultiLevelCacheTest {
 
     @Test
     public void MultiLevelGetNullKey() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         assertThat(multiLevelCache.get(2).isPresent(), is(false));
     }
 
     @Test
     public void MultiLevelContainsExistingKey() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         multiLevelCache.put(2, "Two");
         multiLevelCache.put(3, "Three");
@@ -109,9 +107,9 @@ public class MultiLevelCacheTest {
 
     @Test
     public void MultiLevelContainsNonExistingKey() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         multiLevelCache.put(2, "Two");
         multiLevelCache.put(3, "Three");
@@ -124,9 +122,9 @@ public class MultiLevelCacheTest {
 
     @Test
     public void MultiLevelRemoveNonExistingKey() {
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lru(3)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Fifo(2)));
-        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.Lifo(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLru(3)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createFifo(2)));
+        multiLevelCache.addLevel(new CacheLevel<>(MemoryStorage.ofHashMap(), Strategy.createLifo(3)));
         multiLevelCache.put(1, "One");
         multiLevelCache.put(2, "Two");
         multiLevelCache.put(3, "Three");

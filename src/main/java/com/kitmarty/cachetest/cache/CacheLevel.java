@@ -27,16 +27,12 @@ public class CacheLevel<K, V> implements Cache<K, V> {
     public Optional<Map.Entry<K, V>> put(K key, V value) {
         Objects.requireNonNull(key, "CacheLevel key null");
         Objects.requireNonNull(value, "CacheLevel value null");
-        Optional<K> displacedKey;
-        Optional<V> displacedValue;
-        AbstractMap.SimpleEntry<K, V> displacedEntry;
 
-        displacedKey = strategy.put(key);
+        Optional<K> displacedKey = strategy.put(key);
         if (displacedKey.isPresent()) {
-            displacedValue = storage.remove(displacedKey.get());
-            displacedEntry = new AbstractMap.SimpleEntry<K, V>(displacedKey.get(), displacedValue.get());
+            Optional<V> displacedValue = storage.remove(displacedKey.get());
             storage.put(key, value);
-            return Optional.ofNullable(displacedEntry);
+            return Optional.of(new AbstractMap.SimpleEntry<>(displacedKey.get(), displacedValue.orElseThrow(NoSuchElementException::new)));
         }
         storage.put(key, value);
         return Optional.empty();
@@ -63,7 +59,7 @@ public class CacheLevel<K, V> implements Cache<K, V> {
 
             displacedValue = storage.remove(key);
             strategy.remove(key);
-            displacedEntry = new AbstractMap.SimpleEntry<K, V>(key, displacedValue.get());
+            displacedEntry = new AbstractMap.SimpleEntry<>(key, displacedValue.get());
             return Optional.ofNullable(displacedEntry);
         }
         return Optional.empty();

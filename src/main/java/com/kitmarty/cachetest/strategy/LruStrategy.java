@@ -40,10 +40,7 @@ public class LruStrategy<K> extends Strategy<K> {
 
     @Override
     public boolean update(K key) {
-        if (!(queue.get(key) == null)) {
-            return true;
-        }
-        return false;
+        return !(queue.get(key) == null);
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.Optional;
  * @param <K> the type of keys maintained by this cache
  * @param <V> the type of values contained in this cache
  */
-public interface Cache<K, V> {
+interface Cache<K, V> {
     /**
      * Adds new pair Key-Value to the cache.
      * If the cache already contains value with particular key, the key will be replaced.

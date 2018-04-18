@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * LifoStrategy class extends Storage abstract class and implements simple Lifo strategy of stack.
+ * LifoStrategy class extends Storage abstract class and implements simple createLifo strategy of stack.
  * This simple strategy allows add new elements to the stack,
  * but getting elements doesn't have any affect for elements order in the stack.
  * If you try to add new element, but it's already in queue, this element will be moved to the top of the stack.
@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public class LifoStrategy<K> extends Strategy<K> {
 
-    private final ArrayDeque<K> queue = new ArrayDeque<K>();
+    private final ArrayDeque<K> queue = new ArrayDeque<>();
 
     public LifoStrategy(int size) {
         super(size);
@@ -36,10 +36,7 @@ public class LifoStrategy<K> extends Strategy<K> {
 
     @Override
     public boolean update(K key) {
-        if (containsKey(key)) {
-            return true;
-        }
-        return false;
+        return containsKey(key);
     }
 
     @Override

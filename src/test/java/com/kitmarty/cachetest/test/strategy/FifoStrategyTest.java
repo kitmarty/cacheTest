@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("Duplicates")
 public class FifoStrategyTest {
 
-    private Strategy<Integer> strategy = new FifoStrategy<>(3);
+    private final Strategy<Integer> strategy = new FifoStrategy<>(3);
 
     @Test
     public void FifoReplaceKeyWhenCacheIsNotFull() {
@@ -75,7 +75,7 @@ public class FifoStrategyTest {
 
     @Test
     public void FifoStaticInit() {
-        Strategy.Fifo(5);
+        Strategy.createFifo(5);
     }
 
     @Test

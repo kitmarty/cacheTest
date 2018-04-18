@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("Duplicates")
 public class LifoStrategyTest {
 
-    private Strategy<Integer> strategy = new LifoStrategy<>(3);
+    private final Strategy<Integer> strategy = new LifoStrategy<>(3);
 
     @Test
     public void LifoReplaceKeyWhenCacheIsNotFull() {
@@ -75,7 +75,7 @@ public class LifoStrategyTest {
 
     @Test
     public void LifoStaticInit() {
-        Strategy.Lifo(5);
+        Strategy.createLifo(5);
     }
 
     @Test
