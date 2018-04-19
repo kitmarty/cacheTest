@@ -12,7 +12,8 @@ import java.util.Optional;
  *
  * @param <K> type of key
  */
-public class FifoStrategy<K> extends Strategy<K> {
+public class FifoStrategy<K> extends AbstractStrategy<K>
+        implements Strategy<K> {
 
     private final ArrayDeque<K> queue = new ArrayDeque<>();
 
@@ -20,14 +21,13 @@ public class FifoStrategy<K> extends Strategy<K> {
         super(size);
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public Optional<K> put(K key) {
         Objects.requireNonNull(key, "FifoStrategy put null key");
-        Optional<K> valueToReturn;
         queue.removeFirstOccurrence(key);
+        Optional<K> valueToReturn;
         if (queue.size() == size) {
-            valueToReturn = Optional.ofNullable(queue.remove());
+            valueToReturn = Optional.of(queue.remove());
         } else {
             valueToReturn = Optional.empty();
         }

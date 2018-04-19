@@ -35,11 +35,21 @@ interface Cache<K, V> {
     Optional<V> get(K key);
 
     /**
-     * Check whether the cache contains particular Key
+     * Check whether the cache contains particular key
      *
      * @param key the key of an object
      * @return true if cache contains the key, false if not
      * @throws NullPointerException if the key is null
      */
     boolean containsKey(K key);
+
+    /**
+     * @return Current quantity of cache elements
+     */
+    int getSize();
+
+    /**
+     * @return Maximum quantity of cache elements
+     */
+    int getCapacity();
 }

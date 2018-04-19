@@ -4,6 +4,8 @@ import com.kitmarty.cachetest.strategy.FifoStrategy;
 import com.kitmarty.cachetest.strategy.Strategy;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -13,14 +15,14 @@ public class FifoStrategyTest {
     private final Strategy<Integer> strategy = new FifoStrategy<>(3);
 
     @Test
-    public void FifoReplaceKeyWhenCacheIsNotFull() {
+    public void replaceKeyWhenCacheIsNotFull() {
         strategy.put(1);
         strategy.put(1);
         assertThat(strategy.getSize(), is(1));
     }
 
     @Test
-    public void FifoMaxSize() {
+    public void maxSizeIsLimited() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -30,38 +32,29 @@ public class FifoStrategyTest {
     }
 
     @Test
-    public void FifoStrategyFullCacheDisplaceFirstElement() {
+    public void fullCacheAndDisplaceFirstElement() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
-        assertThat(strategy.put(4).get(), is(1));
+        assertThat(strategy.put(4), is(Optional.of(1)));
     }
 
     @Test
-    public void FifoStrategyFullCacheDisplaceSecondElement() {
-        strategy.put(1);
-        strategy.put(2);
-        strategy.put(3);
-        strategy.put(4);
-        assertThat(strategy.put(5).get(), is(2));
-    }
-
-    @Test
-    public void FifoUpdateFirstAndDisplaceFirst() {
+    public void updateFirstElementAndThenDisplaceIt() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
         strategy.update(1);
-        assertThat(strategy.put(4).get(), is(1));
+        assertThat(strategy.put(4), is(Optional.of(1)));
     }
 
     @Test
-    public void FifoUpdateNonExisting() {
+    public void updateNonExistingKey() {
         assertThat(strategy.update(1), is(false));
     }
 
     @Test
-    public void FifoContainsKey() {
+    public void cacheContainsKey() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -69,22 +62,20 @@ public class FifoStrategyTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void FifoNullKey() {
+    public void putNullKey() {
         strategy.put(null);
     }
 
     @Test
-    public void FifoStaticInit() {
-        Strategy.createFifo(5);
-    }
-
-    @Test
-    public void FifoRemove() {
+    public void keyRemove() {
         strategy.put(1);
         strategy.put(2);
         strategy.remove(1);
-        strategy.put(3);
-        strategy.put(4);
-        assertThat(strategy.put(5).get(), is(2));
+        assertThat(strategy.getSize(),is(1));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void strategyInitWithoutElements(){
+        new FifoStrategy<>(0);
     }
 }

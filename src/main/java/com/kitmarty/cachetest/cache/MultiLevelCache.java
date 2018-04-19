@@ -4,13 +4,16 @@ import java.util.*;
 
 public class MultiLevelCache<K, V> implements Cache<K, V> {
 
-    //private final LinkedHashSet<CacheLevel<K, V>> cacheList = new LinkedHashSet<>();
     private final LinkedList<CacheLevel<K, V>> cacheList = new LinkedList<>();
 
-    public MultiLevelCache() {
+    public MultiLevelCache(CacheLevel<K, V>... cacheLevels) {
+        Collections.addAll(cacheList, cacheLevels);
+        if (cacheList.size()==0){
+            throw new IllegalArgumentException("MultiLevelCache must have one level at least");
+        }
     }
 
-    public MultiLevelCache(LinkedHashSet<CacheLevel<K, V>> cacheList) {
+    public MultiLevelCache(LinkedList<CacheLevel<K, V>> cacheList) {
         this.cacheList.addAll(cacheList);
     }
 
@@ -20,33 +23,25 @@ public class MultiLevelCache<K, V> implements Cache<K, V> {
 
     @Override
     public Optional<Map.Entry<K, V>> put(K key, V value) {
-        Iterator<CacheLevel<K, V>> it;
-        if (!cacheList.isEmpty()) {
-            remove(key);
-            it = cacheList.iterator();
-            while (it.hasNext()) {
-                Optional<Map.Entry<K, V>> displacedEntry = it.next().put(key, value);
-                if (!displacedEntry.isPresent()) {
-                    break;
-                }
-                key = displacedEntry.get().getKey();
-                value = displacedEntry.get().getValue();
+        remove(key);
+        Iterator<CacheLevel<K, V>> it = cacheList.iterator();
+        while (it.hasNext()) {
+            Optional<Map.Entry<K, V>> displacedEntry = it.next().put(key, value);
+            if (!displacedEntry.isPresent()) {
+                return Optional.empty();
             }
-            return Optional.ofNullable(new AbstractMap.SimpleEntry<>(key, value));
+            key = displacedEntry.get().getKey();
+            value = displacedEntry.get().getValue();
         }
-        throw new NullPointerException();
+        return Optional.of(new AbstractMap.SimpleEntry<>(key, value));
     }
 
     @Override
     public Optional<V> get(K key) {
-        Iterator<CacheLevel<K, V>> it;
-        Optional<V> removedValue;
-        if (!cacheList.isEmpty()) {
-            removedValue = remove(key);
-            if (removedValue.isPresent()) {
-                put(key, removedValue.get());
-                return removedValue;
-            }
+        Optional<V> removedValue = remove(key);
+        if (removedValue.isPresent()) {
+            put(key, removedValue.get());
+            return removedValue;
         }
         return Optional.empty();
     }
@@ -55,33 +50,48 @@ public class MultiLevelCache<K, V> implements Cache<K, V> {
     public boolean containsKey(K key) {
         Iterator<CacheLevel<K, V>> it = cacheList.iterator();
         while (it.hasNext()) {
-            CacheLevel<K, V> cacheLevel = it.next();
-            if (cacheLevel.containsKey(key)) {
+            if (it.next().containsKey(key)) {
                 return true;
             }
         }
         return false;
     }
 
+    @Override
+    public int getSize() {
+        int counter = 0;
+        Iterator<CacheLevel<K, V>> it = cacheList.iterator();
+        while (it.hasNext()) {
+            counter += it.next().getSize();
+        }
+        return counter;
+    }
+
     private Optional<V> remove(K key) {
         Iterator<CacheLevel<K, V>> it = cacheList.iterator();
         while (it.hasNext()) {
             CacheLevel<K, V> cacheLevel = it.next();
-            if (cacheLevel.containsKey(key)) {
-                return Optional.ofNullable(cacheLevel.remove(key).get().getValue());
+            Optional<Map.Entry<K, V>> removedEntry = cacheLevel.remove(key);
+            if (removedEntry.isPresent()) {
+                return Optional.ofNullable(removedEntry.get().getValue());
             }
         }
         return Optional.empty();
     }
 
+    /**
+     * @return Quantity of cache levels
+     */
     public int getLevelQuantity() {
         return cacheList.size();
     }
-}
 
-//TODO warnings by idea
-//TODO change architecture in Strategy
-//TODO add method that returns quantity elements of multilevel cache
-//TODO make test easier and more function
-//TODO test naming
-//TODO delete init of empty multilevel cache
+    public int getCapacity(){
+        int counter = 0;
+        Iterator<CacheLevel<K, V>> it = cacheList.iterator();
+        while (it.hasNext()) {
+            counter += it.next().getCapacity();
+        }
+        return counter;
+    }
+}

@@ -4,6 +4,8 @@ import com.kitmarty.cachetest.strategy.LruStrategy;
 import com.kitmarty.cachetest.strategy.Strategy;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -13,14 +15,14 @@ public class LruStrategyTest {
     private final Strategy<Integer> strategy = new LruStrategy<>(3);
 
     @Test
-    public void LruReplaceKeyWhenCacheIsNotFull() {
+    public void replaceKeyWhenCacheIsNotFull() {
         strategy.put(1);
         strategy.put(1);
         assertThat(strategy.getSize(), is(1));
     }
 
     @Test
-    public void LruMaxSize() {
+    public void maxSizeIsLimited() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -30,42 +32,37 @@ public class LruStrategyTest {
     }
 
     @Test
-    public void LruStrategyFullCacheDisplaceFirstElement() {
+    public void fullCacheAndDisplaceFirstElement() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
-        assertThat(strategy.put(4).get(), is(1));
+        assertThat(strategy.put(4), is(Optional.of(1)));
     }
 
     @Test
-    public void LruStrategyFullCacheDisplaceSecondValueAfterUpdateFirst() {
+    public void updateExistingElement() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
+        //< 3 2 1 >
         strategy.update(1);
-        assertThat(strategy.put(5).get(), is(2));
+        //< 1 3 2 >
+        assertThat(strategy.put(4), is(Optional.of(2)));
     }
 
     @Test
-    public void LruUpdateExistingElement() {
+    public void updateNonExistingElement() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
-        strategy.update(1);
-        assertThat(strategy.put(4).get(), is(2));
-    }
-
-    @Test
-    public void LruUpdateNonExistingElement() {
-        strategy.put(1);
-        strategy.put(2);
-        strategy.put(3);
+        //< 3 2 1 >
         strategy.update(0);
-        assertThat(strategy.put(4).get(), is(1));
+        //< 3 2 1 >
+        assertThat(strategy.put(4), is(Optional.of(1)));
     }
 
     @Test
-    public void LruContainsKey() {
+    public void cacheContainsKey() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -73,29 +70,16 @@ public class LruStrategyTest {
         assertThat(strategy.containsKey(2), is(true));
     }
 
-    @Test
-    public void LruParentClassGetCapacity() {
-        assertThat(strategy.getCapacity(), is(3));
-    }
-
     @Test(expected = NullPointerException.class)
-    public void LruNullKey() {
+    public void putNullKey() {
         strategy.put(null);
     }
 
     @Test
-    public void LruStaticInit() {
-        Strategy.createLru(5);
-    }
-
-    @Test
-    public void LruRemove() {
+    public void keyRemove() {
         strategy.put(1);
         strategy.put(2);
         strategy.remove(1);
-        strategy.put(3);
-        strategy.put(4);
-        strategy.update(2);
-        assertThat(strategy.put(5).get(), is(3));
+        assertThat(strategy.getSize(),is(1));
     }
 }

@@ -4,6 +4,8 @@ import com.kitmarty.cachetest.strategy.LifoStrategy;
 import com.kitmarty.cachetest.strategy.Strategy;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -13,14 +15,14 @@ public class LifoStrategyTest {
     private final Strategy<Integer> strategy = new LifoStrategy<>(3);
 
     @Test
-    public void LifoReplaceKeyWhenCacheIsNotFull() {
+    public void replaceKeyWhenCacheIsNotFull() {
         strategy.put(1);
         strategy.put(1);
         assertThat(strategy.getSize(), is(1));
     }
 
     @Test
-    public void LifoMaxSize() {
+    public void maxSizeIsLimited() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -30,33 +32,33 @@ public class LifoStrategyTest {
     }
 
     @Test
-    public void LifoStrategyFullCacheDisplaceTopStackElement() {
+    public void fullCacheAndDisplaceTopStackElement() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
-        assertThat(strategy.put(4).get(), is(3));
+        assertThat(strategy.put(4), is(Optional.of(3)));
     }
 
     @Test
-    public void LifoStrategyFullCacheDisplaceTopStackElementTwice() {
+    public void fullCacheAndDisplaceTopStackElementTwice() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
         strategy.put(4);
-        assertThat(strategy.put(5).get(), is(4));
+        assertThat(strategy.put(5), is(Optional.of(4)));
     }
 
     @Test
-    public void LifoUpdate() {
+    public void updateFirstElementAndThenDisplaceIt(){
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
         strategy.update(1);
-        assertThat(strategy.put(4).get(), is(3));
+        assertThat(strategy.put(4), is(Optional.of(3)));
     }
 
     @Test
-    public void LifoContainsKey() {
+    public void cacheContainsKey() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -64,27 +66,20 @@ public class LifoStrategyTest {
     }
 
     @Test
-    public void LifoUpdateNonExisting() {
+    public void updateNonExistingKey() {
         assertThat(strategy.update(1), is(false));
     }
 
     @Test(expected = NullPointerException.class)
-    public void LifoNullKey() {
+    public void putNullKey() {
         strategy.put(null);
     }
 
     @Test
-    public void LifoStaticInit() {
-        Strategy.createLifo(5);
-    }
-
-    @Test
-    public void LifoRemove() {
+    public void keyRemove() {
         strategy.put(1);
         strategy.put(2);
         strategy.remove(1);
-        strategy.put(3);
-        strategy.put(4);
-        assertThat(strategy.put(5).get(), is(4));
+        assertThat(strategy.getSize(),is(1));
     }
 }

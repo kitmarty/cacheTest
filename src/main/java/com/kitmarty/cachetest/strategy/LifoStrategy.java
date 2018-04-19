@@ -12,7 +12,8 @@ import java.util.Optional;
  *
  * @param <K> type of key
  */
-public class LifoStrategy<K> extends Strategy<K> {
+public class LifoStrategy<K> extends AbstractStrategy<K>
+        implements Strategy<K> {
 
     private final ArrayDeque<K> queue = new ArrayDeque<>();
 
@@ -23,10 +24,10 @@ public class LifoStrategy<K> extends Strategy<K> {
     @Override
     public Optional<K> put(K key) {
         Objects.requireNonNull(key, "LifoStrategy put null key");
-        Optional<K> valueToReturn;
         queue.removeFirstOccurrence(key);
+        Optional<K> valueToReturn;
         if (queue.size() == size) {
-            valueToReturn = Optional.ofNullable(queue.pop());
+            valueToReturn = Optional.of(queue.pop());
         } else {
             valueToReturn = Optional.empty();
         }

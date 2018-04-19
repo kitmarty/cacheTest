@@ -10,7 +10,8 @@ import java.util.Optional;
  *
  * @param <K> key value
  */
-public class LruStrategy<K> extends Strategy<K> {
+public class LruStrategy<K> extends AbstractStrategy<K>
+        implements Strategy<K> {
     private final LinkedHashMap<K, Object> queue;
 
     public LruStrategy(int size) {
@@ -30,7 +31,7 @@ public class LruStrategy<K> extends Strategy<K> {
         Objects.requireNonNull(key, "LruStrategy put null key");
         Optional<K> valueToReturn;
         if ((queue.size() == size) && (!containsKey(key))) {
-            valueToReturn = Optional.ofNullable(queue.entrySet().iterator().next().getKey());
+            valueToReturn = Optional.of(queue.entrySet().iterator().next().getKey());
         } else {
             valueToReturn = Optional.empty();
         }
