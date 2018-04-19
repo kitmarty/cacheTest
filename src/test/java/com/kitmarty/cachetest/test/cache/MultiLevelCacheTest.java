@@ -7,7 +7,6 @@ import com.kitmarty.cachetest.strategy.StrategyCreator;
 import org.junit.Test;
 
 import java.util.AbstractMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Optional;
 

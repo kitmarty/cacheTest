@@ -49,11 +49,13 @@ public class LifoStrategyTest {
     }
 
     @Test
-    public void updateFirstElementAndThenDisplaceIt() {
+    public void updateFirstElementAndThenDisplaceThird() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
+        // < 3 2 1 >
         strategy.update(1);
+        // < 3 2 1 >
         assertThat(strategy.put(4), is(Optional.of(3)));
     }
 

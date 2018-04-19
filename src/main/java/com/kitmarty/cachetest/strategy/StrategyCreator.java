@@ -1,6 +1,6 @@
 package com.kitmarty.cachetest.strategy;
 
-public abstract class StrategyCreator {
+public final class StrategyCreator {
 
     public static <K> Strategy<K> createFifo(int size) {
         return new FifoStrategy<>(size);
@@ -14,4 +14,6 @@ public abstract class StrategyCreator {
         return new LruStrategy<>(size);
     }
 
+    private StrategyCreator() {
+    }
 }
