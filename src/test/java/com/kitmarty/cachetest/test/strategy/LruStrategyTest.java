@@ -80,6 +80,6 @@ public class LruStrategyTest {
         strategy.put(1);
         strategy.put(2);
         strategy.remove(1);
-        assertThat(strategy.getSize(),is(1));
+        assertThat(strategy.getSize(), is(1));
     }
 }

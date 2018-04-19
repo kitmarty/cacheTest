@@ -71,11 +71,11 @@ public class FifoStrategyTest {
         strategy.put(1);
         strategy.put(2);
         strategy.remove(1);
-        assertThat(strategy.getSize(),is(1));
+        assertThat(strategy.getSize(), is(1));
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void strategyInitWithoutElements(){
+    @Test(expected = IllegalArgumentException.class)
+    public void strategyInitWithoutElements() {
         new FifoStrategy<>(0);
     }
 }

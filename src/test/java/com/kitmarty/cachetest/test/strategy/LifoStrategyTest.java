@@ -49,7 +49,7 @@ public class LifoStrategyTest {
     }
 
     @Test
-    public void updateFirstElementAndThenDisplaceIt(){
+    public void updateFirstElementAndThenDisplaceIt() {
         strategy.put(1);
         strategy.put(2);
         strategy.put(3);
@@ -80,6 +80,6 @@ public class LifoStrategyTest {
         strategy.put(1);
         strategy.put(2);
         strategy.remove(1);
-        assertThat(strategy.getSize(),is(1));
+        assertThat(strategy.getSize(), is(1));
     }
 }

@@ -66,7 +66,7 @@ public class MultiLevelCacheTest {
         //< 5 4 3 > - < 2 1 >
         multiLevelCache.get(1);
         //< 1 5 4 > - < 3 2 >
-        assertThat(multiLevelCache.put(6, "Six"), is(Optional.of(new AbstractMap.SimpleEntry<>(3,"Three"))));
+        assertThat(multiLevelCache.put(6, "Six"), is(Optional.of(new AbstractMap.SimpleEntry<>(3, "Three"))));
         //< 6 1 5 > - < 4 2 >
     }
 
@@ -97,27 +97,27 @@ public class MultiLevelCacheTest {
         assertThat(multiLevelCache.containsKey(5), is(false));
     }
 
-    @Test (expected = NullPointerException.class)
-    public void putNullKey(){
+    @Test(expected = NullPointerException.class)
+    public void putNullKey() {
         multiLevelCache.put(null, "One");
     }
 
-    @Test (expected = NullPointerException.class)
-    public void putNullValue(){
+    @Test(expected = NullPointerException.class)
+    public void putNullValue() {
         multiLevelCache.put(1, null);
     }
 
     @Test
-    public void compareCapacityVsSize(){
-        assertThat(multiLevelCache.getSize(),is(0));
-        assertThat(multiLevelCache.getCapacity(),is(5));
+    public void compareCapacityVsSize() {
+        assertThat(multiLevelCache.getSize(), is(0));
+        assertThat(multiLevelCache.getCapacity(), is(5));
         multiLevelCache.put(1, "One");
-        assertThat(multiLevelCache.getSize(),is(1));
-        assertThat(multiLevelCache.getCapacity(),is(5));
+        assertThat(multiLevelCache.getSize(), is(1));
+        assertThat(multiLevelCache.getCapacity(), is(5));
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void emptyInit(){
-        MultiLevelCache<Integer,String> a = new MultiLevelCache<>();
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyInit() {
+        MultiLevelCache<Integer, String> a = new MultiLevelCache<>();
     }
 }

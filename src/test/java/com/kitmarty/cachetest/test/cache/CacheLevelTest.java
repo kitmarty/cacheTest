@@ -93,7 +93,7 @@ public class CacheLevelTest {
         cacheLevel.put(1, "One");
         cacheLevel.put(2, "Two");
         cacheLevel.put(3, "Three");
-        assertThat(cacheLevel.remove(1), is(Optional.of(new AbstractMap.SimpleEntry<>(1,"One"))));
+        assertThat(cacheLevel.remove(1), is(Optional.of(new AbstractMap.SimpleEntry<>(1, "One"))));
     }
 
     @Test
@@ -105,11 +105,11 @@ public class CacheLevelTest {
     }
 
     @Test
-    public void compareCapacityVsSize(){
-        assertThat(cacheLevel.getSize(),is(0));
-        assertThat(cacheLevel.getCapacity(),is(3));
+    public void compareCapacityVsSize() {
+        assertThat(cacheLevel.getSize(), is(0));
+        assertThat(cacheLevel.getCapacity(), is(3));
         cacheLevel.put(1, "One");
-        assertThat(cacheLevel.getSize(),is(1));
-        assertThat(cacheLevel.getCapacity(),is(3));
+        assertThat(cacheLevel.getSize(), is(1));
+        assertThat(cacheLevel.getCapacity(), is(3));
     }
 }

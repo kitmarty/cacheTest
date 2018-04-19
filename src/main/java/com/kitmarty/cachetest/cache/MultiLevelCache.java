@@ -8,7 +8,7 @@ public class MultiLevelCache<K, V> implements Cache<K, V> {
 
     public MultiLevelCache(CacheLevel<K, V>... cacheLevels) {
         Collections.addAll(cacheList, cacheLevels);
-        if (cacheList.size()==0){
+        if (cacheList.size() == 0) {
             throw new IllegalArgumentException("MultiLevelCache must have one level at least");
         }
     }
@@ -86,7 +86,7 @@ public class MultiLevelCache<K, V> implements Cache<K, V> {
         return cacheList.size();
     }
 
-    public int getCapacity(){
+    public int getCapacity() {
         int counter = 0;
         Iterator<CacheLevel<K, V>> it = cacheList.iterator();
         while (it.hasNext()) {
