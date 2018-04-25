@@ -1,6 +1,6 @@
 package com.kitmarty.cachetest.test.strategy;
 
-import com.kitmarty.cachetest.strategy.MruStrategyHash;
+import com.kitmarty.cachetest.strategy.MruStrategyFast;
 import com.kitmarty.cachetest.strategy.Strategy;
 import org.junit.Test;
 
@@ -10,9 +10,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("Duplicates")
-public class MruStrategyHashTest {
+public class MruStrategyFastTest {
 
-    private final Strategy<Integer> strategy = new MruStrategyHash<>(3);
+    private final Strategy<Integer> strategy = new MruStrategyFast<>(3);
 
     @Test
     public void updateElementAndThenDisplaceItWithPut() {

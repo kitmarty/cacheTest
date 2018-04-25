@@ -19,26 +19,26 @@ public class DiskStorage<K, V extends Serializable>
 
     private static int storageCounter = 0;
 
-    private int storageID;
-    private int elementID;
+    private int storageId = 0;
+    private int elementId = 0;
     private final String storagePath;
     private final HashMap<K, Integer> storageHash = new HashMap<>();
 
     public DiskStorage(String storagePath) {
         Objects.requireNonNull(storagePath, "objectStorage");
         this.storagePath = storagePath;
-        this.storageID = ++storageCounter;
+        this.storageId = ++storageCounter;
     }
 
     public DiskStorage() {
         this.storagePath = System.getProperty("user.dir");
-        this.storageID = ++storageCounter;
+        this.storageId = ++storageCounter;
     }
 
     @Override
     public Optional<V> put(K key, V value) {
-        storageHash.put(key, ++elementID);
-        Path filepath = Paths.get(storagePath, String.valueOf(storageID) + "_" + (String.valueOf(elementID)) + FILE_EXTENSION);
+        storageHash.put(key, ++elementId);
+        Path filepath = Paths.get(storagePath, String.valueOf(storageId) + "_" + (String.valueOf(elementId)) + FILE_EXTENSION);
 
         try {
             Files.write(filepath, SerializationUtils.serialize(value));
@@ -56,7 +56,7 @@ public class DiskStorage<K, V extends Serializable>
         Optional<V> valueToReturn = Optional.empty();
 
         if (link != null) {
-            Path filepath = Paths.get(storagePath, String.valueOf(storageID) + "_" + (String.valueOf(link)) + FILE_EXTENSION);
+            Path filepath = Paths.get(storagePath, String.valueOf(storageId) + "_" + (String.valueOf(link)) + FILE_EXTENSION);
 
             try {
                 valueToReturn = Optional.ofNullable(SerializationUtils.deserialize(Files.readAllBytes(filepath)));
@@ -76,7 +76,7 @@ public class DiskStorage<K, V extends Serializable>
 
         if (link != null) {
             storageHash.remove(key);
-            Path filepath = Paths.get(storagePath, String.valueOf(storageID) + "_" + (String.valueOf(link)) + FILE_EXTENSION);
+            Path filepath = Paths.get(storagePath, String.valueOf(storageId) + "_" + (String.valueOf(link)) + FILE_EXTENSION);
             try {
                 Files.deleteIfExists(filepath);
             } catch (IOException e) {
