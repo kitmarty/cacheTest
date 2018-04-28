@@ -1,13 +1,7 @@
 package com.kitmarty.cachetest.storage;
 
-import org.apache.commons.lang3.SerializationUtils;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,29 +13,40 @@ public class DiskStorage<K, V extends Serializable>
 
     private static int storageCounter = 0;
 
-    private int storageId = 0;
     private int elementId = 0;
-    private final String storagePath;
-    private final HashMap<K, Integer> storageHash = new HashMap<>();
+    private final Path storagePath;
+    private final HashMap<K, Path> storageHash = new HashMap<>();
 
     public DiskStorage(String storagePath) {
         Objects.requireNonNull(storagePath, "objectStorage");
-        this.storagePath = storagePath;
-        this.storageId = ++storageCounter;
+        this.storagePath = Paths.get(storagePath).resolve(Paths.get(String.valueOf(++storageCounter)));
+        try {
+            Files.createDirectory(this.storagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public DiskStorage() {
-        this.storagePath = System.getProperty("user.dir");
-        this.storageId = ++storageCounter;
+        this.storagePath = Paths.get(System.getProperty("user.dir")).resolve(Paths.get(String.valueOf(++storageCounter)));
+        try {
+            Files.createDirectory(this.storagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Optional<V> put(K key, V value) {
-        storageHash.put(key, ++elementId);
-        Path filepath = Paths.get(storagePath, String.valueOf(storageId) + "_" + (String.valueOf(elementId)) + FILE_EXTENSION);
+        storageHash.put(key, Paths.get(String.valueOf(++elementId) + FILE_EXTENSION));
+        Path filepath = storagePath.resolve(storageHash.get(key));
 
-        try {
-            Files.write(filepath, SerializationUtils.serialize(value));
+        //serialization to byte array and writing to file
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutput out = new ObjectOutputStream(bos)) {
+            out.writeObject(value);
+            out.flush();
+            Files.write(filepath, bos.toByteArray(), StandardOpenOption.CREATE/*SerializationUtils.serialize(value)*/);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,15 +57,14 @@ public class DiskStorage<K, V extends Serializable>
     @Override
     public Optional<V> get(K key) {
 
-        Integer link = storageHash.get(key);
         Optional<V> valueToReturn = Optional.empty();
+        Path partFilePath = storageHash.get(key);
 
-        if (link != null) {
-            Path filepath = Paths.get(storagePath, String.valueOf(storageId) + "_" + (String.valueOf(link)) + FILE_EXTENSION);
-
-            try {
-                valueToReturn = Optional.ofNullable(SerializationUtils.deserialize(Files.readAllBytes(filepath)));
-            } catch (IOException e) {
+        if (partFilePath != null) {
+            Path filepath = storagePath.resolve(partFilePath);
+            try (ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(Files.readAllBytes(filepath)))) {
+                valueToReturn = Optional.ofNullable((V) in.readObject());
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -71,29 +75,28 @@ public class DiskStorage<K, V extends Serializable>
     @Override
     public Optional<V> remove(K key) {
 
-        Integer link = storageHash.get(key);
         Optional<V> valueToReturn = get(key);
-
-        if (link != null) {
+        Path partFilePath = storageHash.get(key);
+        if (partFilePath != null) {
+            Path filepath = storagePath.resolve(storageHash.get(key));
             storageHash.remove(key);
-            Path filepath = Paths.get(storagePath, String.valueOf(storageId) + "_" + (String.valueOf(link)) + FILE_EXTENSION);
             try {
                 Files.deleteIfExists(filepath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         return valueToReturn;
     }
 
     public void clear() {
         try {
-            DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(storagePath), "*" + FILE_EXTENSION);
+            DirectoryStream<Path> stream = Files.newDirectoryStream(storagePath);
             for (Path entry : stream) {
                 Files.deleteIfExists(entry);
             }
             stream.close();
+            Files.deleteIfExists(storagePath);
             storageHash.clear();
         } catch (IOException e) {
             e.printStackTrace();
