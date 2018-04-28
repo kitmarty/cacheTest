@@ -17,9 +17,9 @@ public class DiskStorage<K, V extends Serializable>
     private final Path storagePath;
     private final HashMap<K, Path> storageHash = new HashMap<>();
 
-    public DiskStorage(String storagePath) {
+    public DiskStorage(Path storagePath) {
         Objects.requireNonNull(storagePath, "objectStorage");
-        this.storagePath = Paths.get(storagePath).resolve(Paths.get(String.valueOf(++storageCounter)));
+        this.storagePath = storagePath.resolve(Paths.get(String.valueOf(++storageCounter)));
         try {
             Files.createDirectory(this.storagePath);
         } catch (IOException e) {
